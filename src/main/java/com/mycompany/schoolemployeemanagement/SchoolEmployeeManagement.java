@@ -4,6 +4,7 @@
 
 package com.mycompany.schoolemployeemanagement;
 
+import com.mycompany.schoolemployeemanagement.controller.EmployeeController;
 /**
  *
  * @author bayan
@@ -11,9 +12,9 @@ package com.mycompany.schoolemployeemanagement;
 public class SchoolEmployeeManagement {
 
     public static void main(String[] args) {
-        System.out.println("-------------------------------");
-        System.out.println("School Employee Management List");
-        System.out.println("-------------------------------");
-        System.out.println("Application Run Successfully");
+        
+        EmployeeController controller = new EmployeeController(); 
+        
+        controller.start();
     }
 }

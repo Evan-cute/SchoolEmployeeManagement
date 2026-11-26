@@ -9,7 +9,6 @@ package com.mycompany.schoolemployeemanagement.enums;
  * @author bayan
  */
 public enum ManagerType {
-    
     SENIOR,
     MIDDLE, 
     JUNIOR,

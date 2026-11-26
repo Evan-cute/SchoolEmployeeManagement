@@ -16,7 +16,7 @@ public class Employee {
     private String department; 
     
     //Constructor 
-    public Employee(String name, String managertype, String department){
+    public Employee(String name, String managerType, String department){
         this.name = name; 
         this.managerType = managerType; 
         this.department = department; 
@@ -27,7 +27,7 @@ public class Employee {
         return name;
     }
 
-    public String getmanagerType() {
+    public String getManagerType() {
         return managerType;
     }
 
