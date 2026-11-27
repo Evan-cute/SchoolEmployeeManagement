@@ -7,6 +7,8 @@ package com.mycompany.schoolemployeemanagement.controller;
 import com.mycompany.schoolemployeemanagement.enums.MenuOptions;
 import com.mycompany.schoolemployeemanagement.model.Employee;
 import com.mycompany.schoolemployeemanagement.view.EmployeeView;
+import com.mycompany.schoolemployeemanagement.enums.ManagerType;
+import com.mycompany.schoolemployeemanagement.enums.Department;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -130,6 +132,66 @@ public class EmployeeController {
             }     
         }
         
+        //Recursive Bonary Search
+        private Employee binarySearch (
+                         ArrayList<Employee> list,
+                         String searchName,
+                         int left,  
+                         int right) {
+              
+            if (left > right){
+                return null;
+            }
+            int middle = left + (right - left) /2;
+            
+            Employee middleEmployee = list.get(middle);
+            
+            int comparison = middleEmployee.getName().compareToIgnoreCase(searchName);
+            
+            if (comparison == 0) {
+                return middleEmployee;
+            }
+
+            if (comparison > 0) {
+                return binarySearch(
+                        list, searchName, left, middle - 1);
+            }
+
+            return binarySearch(
+                    list, searchName, middle + 1, right);
+        }
+            
+        
+        private void searchEmployees(){
+            
+            //Make sure the list is sorted before searching
+            mergeSort(employees);
+            
+            view.displayMessage(" -- Search Employee -- ");
+            
+            String searchName = view.getInput("Enter employee full name: ").trim();
+            
+            if(searchName.isEmpty()){
+                view.displayMessage("Name cannot be empty ");
+                return;
+            }
+            
+            Employee foundEmployee = binarySearch( employees, searchName, 0, employees.size()-1);
+            
+            if (foundEmployee != null){ 
+                
+                view.displayMessage( "-- Employee Found --" );
+                view.displayMessage( "Name: " + foundEmployee.getName() );
+                view.displayMessage( "Manager Type: " + foundEmployee.getManagerType());
+                view.displayMessage( "Department: " + foundEmployee.getDepartment());
+               
+            
+            } else{ 
+                
+                view.displayMessage("Employee not found");
+            }
+        }     
+        
         private void sortEmployees(){
             
             if(employees.isEmpty()){
@@ -157,6 +219,79 @@ public class EmployeeController {
             "Displayed " + displayNumber + " employees out of " + employees.size() + ".");
             
         }
+       
+        private void addEmployee(){
+            
+            view.displayMessage(" -- Add New Employee -- ");
+            
+            //Get employtee Name
+            String name = view.getInput("Enter Employee Full Name:  " ).trim();
+            
+            if (name.isEmpty()){ 
+                view.displayMessage("Name cannot be empty");
+                return;
+            }
+           // Display available manager types
+           ManagerType[] managerTypes = ManagerType.values(); 
+           
+           String[] managerTypeNames = new String [managerTypes.length];
+           
+           for (int i = 0; i < managerTypes.length; i++){
+               managerTypeNames [i] = managerTypes[i].name().replace("_", " ");
+           }
+           
+           view.displayManagerType(managerTypeNames); 
+           
+           String managerInput = view.getInput("Enter Manager Type: ").trim();
+           
+           ManagerType selectedManagerType;
+           
+           try{
+               selectedManagerType = ManagerType.valueOf(managerInput.toUpperCase().replace(" ", "_"));
+           
+           } catch (IllegalArgumentException e){
+               view.displayMessage("Invalid Manager Type. Employee was not added.");
+               return;
+           }
+           // Display available departments
+           Department [] departments = Department.values();
+           
+           String [] departmentNames = new String [departments.length];
+           
+           for (int i = 0; i < departments.length; i++){
+               departmentNames[i] = departments[i].name().replace("_", " ");
+           }
+           
+           view.displayDepartments(departmentNames);
+           
+           String departmentInput = view.getInput("Enter Depaartment: ").trim(); 
+           
+           Department selectedDepartment;
+           
+           try{ 
+               selectedDepartment = Department.valueOf(departmentInput.toUpperCase().replace(" ", "_"));
+          
+           } catch (IllegalArgumentException e){
+               
+               view.displayMessage("Invalid Department. Employee was not added");
+               return;
+           }
+           
+           // Create and add employee 
+           Employee newEmployee = new Employee(
+            name,
+            selectedManagerType.name().replace("_", " "),
+            selectedDepartment.name().replace("_", " ")
+           );
+           
+           employees.add(newEmployee);
+           
+           view.displayMessage(" -- Employee Successfuwlly added! -- ");
+           view.displayMessage("Name: " + newEmployee.getName());
+           view.displayMessage("Manager Type: " + newEmployee.getManagerType());
+           view.displayMessage("Department: " + newEmployee.getDepartment());
+           view.displayMessage("Total employees: " + employees.size());
+        }
     
     //Program Starting
     public void start(){
@@ -179,10 +314,12 @@ public class EmployeeController {
 
                 case 2: 
                     view.displayMessage("Search Selected");
+                    searchEmployees();
                     break;
 
                 case 3: 
                     view.displayMessage("Add New Records Selected");
+                    addEmployee();
                     break;
 
                 case 4: 
