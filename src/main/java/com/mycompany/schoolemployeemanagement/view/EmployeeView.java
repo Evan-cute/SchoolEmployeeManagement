@@ -26,7 +26,9 @@ public class EmployeeView {
     }
     
     public int getMenuChoice(){ 
-        return scanner.nextInt();
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+        return choice;
     }
     
     public void displayMessage(String message){
@@ -36,5 +38,21 @@ public class EmployeeView {
     public String getInput(String message){
         System.out.println(message);
         return scanner.nextLine();
+    }
+    
+    public void displayManagerType(String[] types){
+        System.out.println(" Available Manager types:");
+        
+        for (int i = 0; i < types.length; i++){
+            System.out.println( (i + 1) + ". " + types[i]);
+        }
+    }
+    
+    public void displayDepartments(String[] departments){ 
+        System.out.println("Available Departments:");
+        
+        for (int i = 0; i < departments.length; i++){ 
+            System.out.println((i + 1 ) + ". " + departments[i]);
+        }
     }
 }
